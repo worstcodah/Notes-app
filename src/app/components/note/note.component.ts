@@ -23,6 +23,7 @@ export class NoteComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     if (this.selectedCategoryId) {
       this.notes = this.noteService.getFilteredNotes(this.selectedCategoryId)
+      this.selectedCategoryId = ''
     }
     if (this.selectedSearchParams) {
       switch (this.selectedSearchParams.searchType) {
@@ -37,6 +38,7 @@ export class NoteComponent implements OnInit, OnChanges {
           )
           break
       }
+      this.selectedSearchParams = null
     }
   }
 
