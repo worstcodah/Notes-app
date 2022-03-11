@@ -1,0 +1,6 @@
+<input type="text" placeholder="Filter notes..." [(ngModel)]="searchTerm">
+<mat-select [(ngModel)]="searchType" placeholder="Search type">
+  <mat-option value="Title">Title</mat-option>
+  <mat-option value="Description">Description</mat-option>
+</mat-select>
+<button (click)="emitSearch()">Search</button>

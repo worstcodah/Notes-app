@@ -1,0 +1,46 @@
+<div class="wrapper">
+
+  <div class="row-flex">
+
+    <div *ngFor="let note of notes">
+
+      <mat-card background [inputColor]="note.color">
+        <div class="column-flex">
+
+          <mat-card-title class="card-title">
+            <strong>
+              {{note.title}} {{note.category ? "(" + note.category.name + ")" : ""}}
+            </strong>
+          </mat-card-title>
+          <mat-card-content>
+            {{note.description}}
+
+          </mat-card-content>
+
+
+          <div class="icons">
+            <div class="icons-half">
+
+              <mat-icon>arrow_forward</mat-icon>
+              <mat-icon>star_half</mat-icon>
+              <mat-icon>check</mat-icon>
+            </div>
+            <div class="icons-half">
+              <mat-icon>edit</mat-icon>
+              <mat-icon>delete</mat-icon>
+            </div>
+          </div>
+
+
+        </div>
+      </mat-card>
+
+    </div>
+    <mat-card class="add-note-card">
+      <button mat-icon-button routerLink="/add-note">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card>
+  </div>
+
+</div>

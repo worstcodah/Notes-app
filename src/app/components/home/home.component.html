@@ -1,0 +1,9 @@
+<div class="wrapper">
+
+  <app-search (emitSearchTerm)="receiveSearchParams($event)"></app-search>
+
+  <app-filter (emitSelectedFilter)="receiveCategory($event)">
+  </app-filter>
+  <app-note [selectedCategoryId]="categoryId" [selectedSearchParams]="searchParams">
+  </app-note>
+</div>

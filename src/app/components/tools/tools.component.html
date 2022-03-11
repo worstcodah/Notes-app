@@ -1,0 +1,12 @@
+<p>
+  tools works!
+</p>
+<p [style.color]="titleColor">Title is {{title}}</p>
+<p>Note content is: {{noteContent}}</p>
+
+<button mat-icon-button (click)="setTitle()">
+  <mat-icon>add</mat-icon>
+</button>
+<mat-form-field>
+  <input matInput placeholder="Add Note" [(ngModel)]="noteContent">
+</mat-form-field>

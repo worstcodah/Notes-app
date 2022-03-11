@@ -1,0 +1,61 @@
+mat-card {
+  width : 150px;
+  height: 150px;
+}
+
+.wrapper {
+  display       : flex;
+  flex-direction: row;
+  gap           : 3em;
+}
+
+.card-title {
+  margin-left: 10px;
+}
+
+
+.icons {
+  height         : 75px;
+  display        : flex;
+  flex-direction : row;
+  justify-content: space-between;
+  align-items    : flex-end;
+
+}
+
+.icons-half {
+  display       : flex;
+  flex-direction: row;
+
+}
+
+.column-flex {
+  display       : flex;
+  flex-direction: column;
+
+}
+
+
+mat-icon {
+  cursor: pointer;
+}
+
+.row-flex {
+  display        : flex;
+  flex-direction : row;
+  justify-content: center;
+  gap            : 3em;
+  align-items    : center;
+  width          : 100vw;
+
+}
+
+.add-note-card {
+  max-width       : 150px;
+  min-height      : 150px;
+  flex            : 1;
+  display         : flex;
+  justify-content : center;
+  align-items     : center;
+  background-color: aquamarine;
+}

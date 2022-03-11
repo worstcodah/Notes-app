@@ -1,0 +1,22 @@
+<div class="wrapper">
+
+  <h1>Add a note </h1>
+  <form [formGroup]="formGroup" #form="ngForm" (ngSubmit)="addNote()">
+    <div class="wrapper">
+
+      <mat-form-field>
+        <input matInput id="title" name="title" formControlName="title" placeholder="Enter the title..." />
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea matInput formControlName="description" placeholder="Enter the description..."></textarea>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="category" placeholder="Category">
+          <mat-option *ngFor="let category of categories" [value]="category">{{category.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-button [disabled]="!form.valid">Add note</button>
+    </div>
+  </form>
+</div>
