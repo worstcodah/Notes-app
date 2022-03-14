@@ -25,10 +25,25 @@ export class NoteService {
     return this.http.get<Note[]>(this.baseUrl + `/notes`, this.httpOptions)
   }
 
+  getNote(noteId: string) {
+    return this.http.get<Note>(this.baseUrl + `/notes/${noteId}`)
+  }
+
   addNote(note: Note) {
     return this.http
       .post(this.baseUrl + '/notes', note, this.httpOptions)
       .subscribe()
+  }
+
+  removeNote(note: Note) {
+    return this.http
+      .delete(this.baseUrl + `/notes/${note.id}`, this.httpOptions)
+      .subscribe()
+  }
+
+  editNote(id: string, note: Note) {
+    console.log(note)
+    return this.http.put(this.baseUrl + `/notes/${id}`, note).subscribe()
   }
 
   getFilteredNotes(categoryId: string) {

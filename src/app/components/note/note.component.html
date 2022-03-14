@@ -26,8 +26,8 @@
               <mat-icon>check</mat-icon>
             </div>
             <div class="icons-half">
-              <mat-icon>edit</mat-icon>
-              <mat-icon>delete</mat-icon>
+              <mat-icon (click)="editNote(note)">edit</mat-icon>
+              <mat-icon (click)="removeNote(note)">delete</mat-icon>
             </div>
           </div>
 

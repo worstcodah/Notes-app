@@ -1,3 +1,4 @@
+import { Router } from '@angular/router'
 import {
   Component,
   Input,
@@ -24,7 +25,7 @@ export class NoteComponent implements OnInit, OnChanges {
   filteredNotesByDescriptionSub: Subscription
   getNotesSub: Subscription
 
-  constructor(private noteService: NoteService) {}
+  constructor(private noteService: NoteService, private router: Router) {}
   ngOnChanges(): void {
     if (this.selectedCategoryId) {
       this.filteredNotesSub = this.noteService
@@ -74,5 +75,13 @@ export class NoteComponent implements OnInit, OnChanges {
     if (this.getNotesSub != null) {
       this.getNotesSub.unsubscribe()
     }
+  }
+
+  removeNote(note: Note) {
+    this.noteService.removeNote(note)
+  }
+
+  editNote(note: Note) {
+    this.router.navigateByUrl(`/edit-note/${note.id}`)
   }
 }

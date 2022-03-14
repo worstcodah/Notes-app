@@ -50,9 +50,12 @@ const editNote = (request: HttpRequest<any>) => {
 }
 
 const removeNote = (request: HttpRequest<any>) => {
+  debugger
   const id = extractIdPathParamFromUrl(request)
+  console.log(id)
 
   notes = notes.filter((c) => c.id !== id)
+  console.log(notes)
 
   return of(
     new HttpResponse({

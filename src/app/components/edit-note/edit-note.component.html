@@ -1,0 +1,28 @@
+<form [formGroup]="formGroup" #form="ngForm" (ngSubmit)="editNote()">
+  <div class="wrapper">
+
+    <mat-form-field>
+      <input matInput id="title" name="title" formControlName="title" placeholder="Enter the title..."
+        [(ngModel)]="selectedNote.title" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <textarea matInput formControlName="description" placeholder="Enter the description..."
+        [(ngModel)]="selectedNote.description"></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="category" placeholder="Category" [(ngModel)]="selectedNote.categoryId">
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{category.name}} ({{category.id}})</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="color" placeholder="Color" [(ngModel)]="selectedNote.color">
+        <mat-option *ngFor="let color of colors" [value]="color">
+          {{color}}</mat-option>
+        Current color: {{selectedNote.color}}
+      </mat-select>
+    </mat-form-field>
+    <button mat-button [disabled]="!form.valid">Edit note</button>
+  </div>
+</form>

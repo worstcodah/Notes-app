@@ -20,7 +20,8 @@ import { BackgroundDirective } from './directives/background.directive'
 import { MatSelectModule } from '@angular/material/select'
 import { SearchComponent } from './components/search/search.component'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
-import { HttpMockApiInterceptor } from './services/http-mock-api.interceptor'
+import { HttpMockApiInterceptor } from './services/http-mock-api.interceptor';
+import { EditNoteComponent } from './components/edit-note/edit-note.component'
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +33,7 @@ import { HttpMockApiInterceptor } from './services/http-mock-api.interceptor'
     AddNoteComponent,
     BackgroundDirective,
     SearchComponent,
+    EditNoteComponent,
   ],
   imports: [
     BrowserModule,
