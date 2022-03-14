@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs'
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router'
@@ -13,6 +14,8 @@ import { Category } from '../filter/category'
 export class AddNoteComponent implements OnInit {
   formGroup!: FormGroup
   selectedCategory: Category
+  idCategoryNote: number
+  addSubscription: Subscription
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -53,6 +56,10 @@ export class AddNoteComponent implements OnInit {
     })
   }
 
+  ngOnDestroy() {
+    this.addSubscription.unsubscribe()
+  }
+
   get title() {
     return this.formGroup.get('title').value
   }
@@ -65,7 +72,7 @@ export class AddNoteComponent implements OnInit {
   }
 
   addNote() {
-    this.noteService.addNote({
+    this.addSubscription = this.noteService.addNote({
       id: 'ID1',
       title: this.title,
       description: this.description,

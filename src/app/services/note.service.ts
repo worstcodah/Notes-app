@@ -1,61 +1,64 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators' // This is where I import map operator
 import { Note } from '../components/note/note'
 
 @Injectable({
   providedIn: 'root',
 })
 export class NoteService {
-  private notes: Note[] = [
-    {
-      id: 'Id1',
-      title: 'First note',
-      description: 'This is the description for the first note',
-      color: 'red',
-      categoryId: '1',
-    },
-    {
-      id: 'Id1',
-      title: 'Second note',
-      description: 'This is the description for the second note',
-      color: 'blue',
-      categoryId: '2',
-    },
-    {
-      id: 'Id1',
-      title: 'Third note',
-      description: 'This is the description for the third note',
-      color: 'green',
-      categoryId: '3',
-    },
-  ]
+  readonly baseUrl = 'https://localhost:4200'
+  readonly httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  }
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   serviceCall() {
     console.log('Note service was called')
   }
 
-  getNotes() {
-    return this.notes
+  getNotes(): Observable<Note[]> {
+    return this.http.get<Note[]>(this.baseUrl + `/notes`, this.httpOptions)
   }
 
   addNote(note: Note) {
-    this.notes.push(note)
+    return this.http
+      .post(this.baseUrl + '/notes', note, this.httpOptions)
+      .subscribe()
   }
 
   getFilteredNotes(categoryId: string) {
-    return this.notes.filter((note) => note.categoryId == categoryId)
+    return this.http
+      .get<Note[]>(this.baseUrl + `/notes`, this.httpOptions)
+      .pipe(
+        map((notes) => notes.filter((note) => note.categoryId === categoryId)),
+      )
   }
 
-  getFilteredNotesByTitle(searchTerm: string) {
-    return this.notes.filter((note) =>
-      note.title.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
+  getFilteredNotesByTitle(searchTerm: string): Observable<Note[]> {
+    return this.http
+      .get<Note[]>(this.baseUrl + `/notes`, this.httpOptions)
+      .pipe(
+        map((notes) =>
+          notes.filter((note) =>
+            note.title.toLowerCase().includes(searchTerm.toLowerCase()),
+          ),
+        ),
+      )
   }
   getFilteredNotesByDescription(searchTerm: string) {
-    return this.notes.filter((note) =>
-      note.description.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
+    return this.http
+      .get<Note[]>(this.baseUrl + `/notes`, this.httpOptions)
+      .pipe(
+        map((notes) =>
+          notes.filter((note) =>
+            note.description.toLowerCase().includes(searchTerm.toLowerCase()),
+          ),
+        ),
+      )
   }
 }

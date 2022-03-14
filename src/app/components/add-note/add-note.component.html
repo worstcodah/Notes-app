@@ -13,9 +13,13 @@
       </mat-form-field>
       <mat-form-field>
         <mat-select formControlName="category" placeholder="Category">
-          <mat-option *ngFor="let category of categories" [value]="category">{{category.name}}</mat-option>
+          <mat-option *ngFor="let category of categories" [value]="category" [(ngModel)]="idCategoryNote">
+            {{category.name}}</mat-option>
         </mat-select>
       </mat-form-field>
+      <p>
+        Selected category id: {{category.id}}
+      </p>
       <button mat-button [disabled]="!form.valid">Add note</button>
     </div>
   </form>

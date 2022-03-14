@@ -1,6 +1,6 @@
 mat-card {
   width : 150px;
-  height: 150px;
+  height: auto;
 }
 
 .wrapper {
@@ -41,12 +41,13 @@ mat-icon {
 }
 
 .row-flex {
-  display        : flex;
-  flex-direction : row;
-  justify-content: center;
-  gap            : 3em;
-  align-items    : center;
-  width          : 100vw;
+
+
+  display              : grid;
+  grid-template-columns: auto auto auto auto;
+  justify-content      : center;
+  align-items          : center;
+  gap                  : 5rem;
 
 }
 

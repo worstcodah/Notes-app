@@ -17,8 +17,10 @@ import { FilterComponent } from './components/filter/filter.component'
 import { HomeComponent } from './components/home/home.component'
 import { AddNoteComponent } from './components/add-note/add-note.component'
 import { BackgroundDirective } from './directives/background.directive'
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select'
 import { SearchComponent } from './components/search/search.component'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HttpMockApiInterceptor } from './services/http-mock-api.interceptor'
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,8 +45,15 @@ import { SearchComponent } from './components/search/search.component'
     MatCardModule,
     ReactiveFormsModule,
     MatSelectModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpMockApiInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
