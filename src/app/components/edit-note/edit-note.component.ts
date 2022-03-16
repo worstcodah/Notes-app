@@ -1,5 +1,6 @@
+import { Subscription } from 'rxjs'
 import { Note } from './../note/note'
-import { Component, OnInit } from '@angular/core'
+import { AfterViewInit, Component, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { FilterService } from 'src/app/services/filter.service'
 import { Category } from '../filter/category'
@@ -15,6 +16,8 @@ export class EditNoteComponent implements OnInit {
   formGroup: FormGroup
   selectedNote: Note
   colors: string[] = ['Red', 'Green', 'Blue', 'Yellow']
+  notesSub: Subscription
+
   constructor(
     private formBuilder: FormBuilder,
     private filterService: FilterService,
@@ -23,17 +26,12 @@ export class EditNoteComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params) => {
-      this.noteService.getNote(params['id']).subscribe((note) => {
-        console.log(note)
-        this.selectedNote = note
-        /*this.formGroup.patchValue({
-          color: note.color,
-          category: note.category,
-        })
-        */
-      })
+    debugger
+    this.notesSub = this.noteService.getNote('2').subscribe((note) => {
+      this.selectedNote = note
+      console.log(this.selectedNote)
     })
+    /*
     this.formGroup = this.formBuilder.group({
       title: [
         '',
@@ -51,9 +49,16 @@ export class EditNoteComponent implements OnInit {
           Validators.maxLength(50),
         ],
       ],
-      category: [this.selectedNote.categoryId, [Validators.required]],
       color: [this.selectedNote.color, [Validators.required]],
+      category: [this.selectedNote.categoryId, [Validators.required]],
     })
+    */
+  }
+
+  ngOnDestroy() {
+    if (this.notesSub) {
+      this.notesSub.unsubscribe()
+    }
   }
 
   get categories(): Category[] {

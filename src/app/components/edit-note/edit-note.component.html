@@ -1,27 +1,36 @@
-<form [formGroup]="formGroup" #form="ngForm" (ngSubmit)="editNote()">
-  <div class="wrapper">
-
+<form #form="ngForm" (ngSubmit)="editNote()">
+  <div class="wrapper" *ngIf="selectedNote">
     <mat-form-field>
-      <input matInput id="title" name="title" formControlName="title" placeholder="Enter the title..."
+
+
+      <input matInput id="title" name="title" required placeholder="Enter the title..."
         [(ngModel)]="selectedNote.title" />
+
     </mat-form-field>
 
     <mat-form-field>
-      <textarea matInput formControlName="description" placeholder="Enter the description..."
-        [(ngModel)]="selectedNote.description"></textarea>
+
+
+      <textarea matInput required placeholder="Enter the description..." [(ngModel)]="selectedNote.description"
+        name="description"></textarea>
+
     </mat-form-field>
     <mat-form-field>
-      <mat-select formControlName="category" placeholder="Category" [(ngModel)]="selectedNote.categoryId">
+
+      <mat-select required placeholder="Category" [(ngModel)]="selectedNote.categoryId" name="category">
         <mat-option *ngFor="let category of categories" [value]="category.id">
           {{category.name}} ({{category.id}})</mat-option>
       </mat-select>
+
     </mat-form-field>
     <mat-form-field>
-      <mat-select formControlName="color" placeholder="Color" [(ngModel)]="selectedNote.color">
+
+
+      <mat-select placeholder="Color" required [(ngModel)]="selectedNote.color" name="color">
         <mat-option *ngFor="let color of colors" [value]="color">
           {{color}}</mat-option>
-        Current color: {{selectedNote.color}}
       </mat-select>
+
     </mat-form-field>
     <button mat-button [disabled]="!form.valid">Edit note</button>
   </div>

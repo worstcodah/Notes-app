@@ -17,7 +17,6 @@ export class AddNoteComponent implements OnInit {
   idCategoryNote: number
   addSubscription: Subscription
   constructor(
-    private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private noteService: NoteService,
     private filterService: FilterService,
@@ -47,17 +46,12 @@ export class AddNoteComponent implements OnInit {
       ],
       category: ['', [Validators.required]],
     })
-    this.activatedRoute.params.subscribe((next) => {
-      console.log(next['id'])
-    })
-    this.activatedRoute.queryParams.subscribe((parameters) => {
-      console.log(parameters['title'])
-      console.log(parameters['description'])
-    })
   }
 
   ngOnDestroy() {
-    this.addSubscription.unsubscribe()
+    if (this.addSubscription) {
+      this.addSubscription.unsubscribe()
+    }
   }
 
   get title() {
