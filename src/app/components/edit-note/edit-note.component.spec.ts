@@ -64,7 +64,6 @@ describe('EditNoteComponent', () => {
   })
 
   it('should create', () => {
-    debugger
     expect(component).toBeTruthy()
   })
 
@@ -76,11 +75,10 @@ describe('EditNoteComponent', () => {
     ])
   })
 
-  fit('edit note', () => {
+  it('edit note', () => {
     const mockNoteService: NoteService = TestBed.inject(NoteService)
     let sub: Subscription
 
-    spyOnProperty(component.selectedNote, 'id', 'get').and.returnValue('val')
     const spy = spyOn(mockNoteService, 'editNote').and.returnValue(sub)
     spyOn(mockNoteService, 'getNote').and.returnValue(obj)
 

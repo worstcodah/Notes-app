@@ -1,3 +1,4 @@
+import { NoteService } from 'src/app/services/note.service'
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { forwardRef } from '@angular/core'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
@@ -14,12 +15,18 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterTestingModule } from '@angular/router/testing'
 import { AddNoteComponent } from './add-note.component'
+import { Subscription } from 'rxjs'
 
 describe('AddNoteComponent', () => {
   let component: AddNoteComponent
   let fixture: ComponentFixture<AddNoteComponent>
 
   beforeEach(async () => {
+    const mockNoteService: NoteService = <any>{
+      addNote() {
+        return 'note'
+      },
+    }
     await TestBed.configureTestingModule({
       declarations: [AddNoteComponent],
       imports: [
@@ -34,6 +41,7 @@ describe('AddNoteComponent', () => {
         BrowserAnimationsModule,
         BrowserModule,
       ],
+      providers: [{ provide: NoteService, useFactory: () => mockNoteService }],
     }).compileComponents()
   })
 
@@ -41,10 +49,6 @@ describe('AddNoteComponent', () => {
     fixture = TestBed.createComponent(AddNoteComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
-  })
-
-  afterEach(() => {
-    fixture.destroy()
   })
 
   it('should create', () => {
@@ -80,5 +84,17 @@ describe('AddNoteComponent', () => {
       const control = component.formGroup.controls['category']
       expect(control).toBeTruthy()
     })
+  })
+
+  it('add note', () => {
+    const mockNoteService: NoteService = TestBed.inject(NoteService)
+    let subscription: Subscription
+    component.formGroup.get('title').setValue('title')
+    component.formGroup.get('description').setValue('description')
+    component.selectedCategory = { id: 'ID1', name: 'To do' }
+    const spy = spyOn(mockNoteService, 'addNote').and.returnValue(subscription)
+    component.addNote()
+
+    expect(spy).toHaveBeenCalledTimes(1)
   })
 })

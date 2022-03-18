@@ -26,33 +26,10 @@ export class EditNoteComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    debugger
     this.notesSub = this.noteService.getNote('2').subscribe((note) => {
       this.selectedNote = note
       console.log(this.selectedNote)
     })
-    /*
-    this.formGroup = this.formBuilder.group({
-      title: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(20),
-        ],
-      ],
-      description: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(50),
-        ],
-      ],
-      color: [this.selectedNote.color, [Validators.required]],
-      category: [this.selectedNote.categoryId, [Validators.required]],
-    })
-    */
   }
 
   ngOnDestroy() {
