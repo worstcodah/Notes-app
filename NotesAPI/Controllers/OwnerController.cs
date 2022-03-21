@@ -12,7 +12,8 @@ namespace NotesAPI.Controllers
     [ApiController]
     public class OwnerController : ControllerBase
     {
-        private List<Owner> _owners = new List<Owner>();
+        private List<Owner> _owners = new List<Owner> { new Owner { Id = new Guid("00000000-0000-0000-0000-000000000001"), Name="A" },
+        new Owner {  Id = new Guid("00000000-0000-0000-0000-000000000002"), Name="B"} };
 
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
@@ -31,5 +32,36 @@ namespace NotesAPI.Controllers
             _owners.Add(owner);
             return Ok(_owners);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateOwner(Guid id, [FromBody] Owner owner)
+        {
+            if (owner is null)
+            {
+                return BadRequest();
+            }
+            var ownerIndex = _owners.FindIndex((owner) => owner.Id.Equals(id));
+            if (ownerIndex != -1)
+            {
+                _owners[ownerIndex] = owner;
+                return Ok(_owners);
+            }
+            CreateOwner(owner);
+
+            return Ok(_owners);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteOwner(Guid id)
+        {
+            var ownerIndex = _owners.FindIndex((owner) => owner.Id.Equals(id));
+            if (ownerIndex != -1)
+            {
+                _owners.RemoveAt(ownerIndex);
+                return Ok(_owners);
+            }
+            return NotFound();
+        }
+
     }
 }
