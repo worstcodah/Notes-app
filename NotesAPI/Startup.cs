@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NotesAPI.Models;
+using NotesAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +30,9 @@ namespace NotesAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<INoteCollectionService, NoteCollectionService>();
+            services.AddSingleton<ICollectionService<Owner>, OwnerCollectionService>();
+
             services.AddSwaggerGen(c =>
             {
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

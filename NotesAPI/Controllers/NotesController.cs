@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NotesAPI.Models;
+using NotesAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,22 @@ namespace NotesAPI.Controllers
         new Note { Id = new Guid("00000000-0000-0000-0000-000000000005"), CategoryId = "1", OwnerId = new Guid("00000000-0000-0000-0000-000000000001"), Title = "Fifth Note", Description = "Fifth Note Description" }
         };
 
-        public NotesController() { }
+        private INoteCollectionService _noteCollectionService;
+
+
+        public NotesController(INoteCollectionService noteCollectionService)
+        {
+            _noteCollectionService = noteCollectionService ??
+                throw new ArgumentNullException(nameof(noteCollectionService));
+        }
 
         [HttpGet]
         [ProducesResponseType(200)]
         public IActionResult GetNotes()
         {
-            return Ok(_notes);
+            List<Note> notes = _noteCollectionService.GetAll();
+            return Ok(notes);
+
         }
 
 
@@ -34,11 +44,10 @@ namespace NotesAPI.Controllers
         [ProducesResponseType(404)]
         public IActionResult GetNote(Guid id)//  string id)
         {
-            var noteIndex = _notes.FindIndex(note => note.Id.Equals(id));
-            if (noteIndex != -1)
-                return Ok(_notes.ElementAt(noteIndex));
-
-            return NotFound();
+            var note = _noteCollectionService.Get(id);
+            if (note is null)
+                return NotFound();
+            return Ok(note);
 
         }
 
@@ -46,12 +55,14 @@ namespace NotesAPI.Controllers
         [HttpGet("owner/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public IActionResult GetNoteByOwner(Guid id)
+        public IActionResult GetNotesByOwner(Guid id)
         {
-            var foundNote = _notes.Where(note => note.OwnerId.Equals(id));
-            if (foundNote is null)
+            var foundNotes = _noteCollectionService.GetNotesByOwnerId(id);
+            if(foundNotes is null)
+            {
                 return NotFound();
-            return Ok(foundNote);
+            }
+            return Ok(foundNotes);
         }
 
         [HttpPost]
@@ -65,23 +76,15 @@ namespace NotesAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IActionResult UpdateNote(Guid id, [FromBody] Note note)
         {
-            if (note == null)
+            if (_noteCollectionService.Update(id, note))
             {
-                return BadRequest("Note cannot be null");
+                return Ok("Update successful!");
             }
-            var noteIndex = _notes.FindIndex((listNote) => listNote.Id.Equals(id));
-            if (noteIndex != -1)
-            {
-                _notes[noteIndex] = note;
-                return Ok(_notes);
-            }
-            //return NotFound();
-            //_notes.Add(note);
-            note.Id = id;
-            Post(note);
-            return Ok(_notes);
+            return NotFound();
         }
         [HttpPut("{noteId},{ownerId}")]
         public IActionResult UpdateNoteByOwner(Guid noteId, Guid ownerId, [FromBody] Note note)
@@ -115,17 +118,17 @@ namespace NotesAPI.Controllers
             }
             return NotFound();
         }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteNote(Guid id)
         {
-            var noteIndex = _notes.FindIndex((listNote) => listNote.Id.Equals(id));
-            if (noteIndex != -1)
+            if (_noteCollectionService.Delete(id))
             {
-                _notes.RemoveAt(noteIndex);
-                return Ok(_notes);
+                return Ok("Delete successful!");
             }
             return NotFound();
         }
+
         [HttpDelete("owner/{ownerId}")]
         public IActionResult DeleteNotesByOwner(Guid ownerId)
         {

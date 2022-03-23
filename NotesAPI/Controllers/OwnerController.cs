@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NotesAPI.Models;
+using NotesAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,25 +13,46 @@ namespace NotesAPI.Controllers
     [ApiController]
     public class OwnerController : ControllerBase
     {
-        private List<Owner> _owners = new List<Owner> { new Owner { Id = new Guid("00000000-0000-0000-0000-000000000001"), Name="A" },
-        new Owner {  Id = new Guid("00000000-0000-0000-0000-000000000002"), Name="B"} };
+        private OwnerCollectionService _ownerCollectionService;
+
+        public OwnerController(ICollectionService<Owner> collectionService)
+        {
+            _ownerCollectionService = collectionService as OwnerCollectionService;
+        }
 
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public IActionResult GetOwner(string id)
+        public IActionResult GetOwner(Guid id)
         {
-            if (_owners.Count > int.Parse(id))
-                return Ok(_owners[int.Parse(id)]);
-            return NotFound();
+            var result = _ownerCollectionService.Get(id);
+            if(result is null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
+
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        public IActionResult GetOwners()
+        {
+            return Ok(_ownerCollectionService.GetAll());
+        }
+
+
 
         [HttpPost]
         [ProducesResponseType(200)]
         public IActionResult CreateOwner([FromBody] Owner owner)
         {
-            _owners.Add(owner);
-            return Ok(_owners);
+            var create = _ownerCollectionService.Create(owner);
+            if(create is false)
+            {
+                return BadRequest($"An object with the id {owner.Id} already exists" );
+            }
+            return Ok(_ownerCollectionService.GetAll());
         }
 
         [HttpPut("{id}")]
@@ -40,27 +62,24 @@ namespace NotesAPI.Controllers
             {
                 return BadRequest();
             }
-            var ownerIndex = _owners.FindIndex((owner) => owner.Id.Equals(id));
-            if (ownerIndex != -1)
-            {
-                _owners[ownerIndex] = owner;
-                return Ok(_owners);
-            }
-            CreateOwner(owner);
 
-            return Ok(_owners);
+            var update = _ownerCollectionService.Update(id, owner);
+            if(update is false)
+            {
+                return NotFound();
+            }
+            return Ok(_ownerCollectionService.GetAll());
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteOwner(Guid id)
         {
-            var ownerIndex = _owners.FindIndex((owner) => owner.Id.Equals(id));
-            if (ownerIndex != -1)
+            var delete = _ownerCollectionService.Delete(id);
+            if(delete is false)
             {
-                _owners.RemoveAt(ownerIndex);
-                return Ok(_owners);
+                return NotFound();
             }
-            return NotFound();
+            return Ok(_ownerCollectionService.GetAll());
         }
 
     }
