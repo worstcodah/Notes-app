@@ -23,9 +23,9 @@ namespace NotesAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public IActionResult GetOwner(Guid id)
+        public async Task<IActionResult> GetOwner(Guid id)
         {
-            var result = _ownerCollectionService.Get(id);
+            var result = await _ownerCollectionService.Get(id);
             if(result is null)
             {
                 return NotFound();
@@ -36,51 +36,52 @@ namespace NotesAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(200)]
-        public IActionResult GetOwners()
+        public async Task<IActionResult> GetOwners()
         {
-            return Ok(_ownerCollectionService.GetAll());
+            return Ok(await _ownerCollectionService.GetAll());
         }
 
 
 
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateOwner([FromBody] Owner owner)
+        public async Task<IActionResult> CreateOwner([FromBody] Owner owner)
         {
-            var create = _ownerCollectionService.Create(owner);
+            
+            var create = await _ownerCollectionService.Create(owner);
             if(create is false)
             {
                 return BadRequest($"An object with the id {owner.Id} already exists" );
             }
-            return Ok(_ownerCollectionService.GetAll());
+            return Ok(await _ownerCollectionService.GetAll());
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateOwner(Guid id, [FromBody] Owner owner)
+        public async Task<IActionResult> UpdateOwner(Guid id, [FromBody] Owner owner)
         {
             if (owner is null)
             {
                 return BadRequest();
             }
 
-            var update = _ownerCollectionService.Update(id, owner);
+            var update = await _ownerCollectionService.Update(id, owner);
             if(update is false)
             {
                 return NotFound();
             }
-            return Ok(_ownerCollectionService.GetAll());
+            return Ok(await _ownerCollectionService.GetAll());
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteOwner(Guid id)
+        public async Task<IActionResult> DeleteOwner(Guid id)
         {
-            var delete = _ownerCollectionService.Delete(id);
+            var delete = await _ownerCollectionService.Delete(id);
             if(delete is false)
             {
                 return NotFound();
             }
-            return Ok(_ownerCollectionService.GetAll());
+            return Ok(await _ownerCollectionService.GetAll());
         }
-
+        
     }
 }

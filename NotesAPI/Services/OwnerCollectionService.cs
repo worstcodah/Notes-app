@@ -1,4 +1,6 @@
-﻿using NotesAPI.Models;
+﻿using MongoDB.Driver;
+using NotesAPI.Models;
+using NotesAPI.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,54 +10,66 @@ namespace NotesAPI.Services
 {
     public class OwnerCollectionService : ICollectionService<Owner>
     {
-        private List<Owner> _owners = new List<Owner> { new Owner { Id = new Guid("00000000-0000-0000-0000-000000000001"), Name="A" },
-        new Owner {  Id = new Guid("00000000-0000-0000-0000-000000000002"), Name="B"} };
-        public bool Create(Owner model)
+        private readonly IMongoCollection<Owner> _owners;
+
+        public OwnerCollectionService(IMongoDBSettings settings)
         {
-            var searchIndex = _owners.FindIndex(owner => owner.Id.Equals(model.Id));
-            if (searchIndex != -1)
+            var client = new MongoClient(settings.ConnectionString);
+            var database = client.GetDatabase(settings.DatabaseName);
+
+            _owners = database.GetCollection<Owner>(settings.OwnerCollectionName);
+        }
+
+
+
+
+        public async Task<bool> Create(Owner model)
+        {
+            var result = await _owners.FindAsync((owner) => owner.Id.Equals(model.Id)).Result.ToListAsync();
+            if (result.Count.Equals(0))
             {
-                _owners.Add(model);
+                await _owners.InsertOneAsync(model);
                 return true;
             }
             return false;
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            var searchIndex = _owners.FindIndex(owner => owner.Id.Equals(id));
-            if (searchIndex != -1)
+            var result = await _owners.DeleteOneAsync((owner) => owner.Id == id);
+
+            if (result.IsAcknowledged && result.DeletedCount.Equals(0))
             {
-                _owners.RemoveAt(searchIndex);
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
-        public Owner Get(Guid id)
+        public async Task<Owner> Get(Guid id)
         {
-            var searchIndex = _owners.FindIndex(owner => owner.Id.Equals(id));
-            if (searchIndex != -1)
+            var result = await _owners.FindAsync((owner) => owner.Id.Equals(id)).Result.ToListAsync();
+            if (result.Count.Equals(0))
             {
-                return _owners.ElementAt(searchIndex);
+                return null;
             }
-            return null;
+            return result.Where(owner => owner.Id.Equals(id)).ToList().First();
         }
 
-        public List<Owner> GetAll()
+        public async Task<List<Owner>> GetAll()
         {
-            return _owners;
+            var result = await _owners.FindAsync(owner => true);
+            return result.ToList();
         }
 
-        public bool Update(Guid id, Owner model)
+        public async Task<bool> Update(Guid id, Owner model)
         {
-            var searchIndex = _owners.FindIndex(owner => owner.Id.Equals(id));
-            if (searchIndex != -1)
+            var result = await _owners.ReplaceOneAsync(owner => owner.Id.Equals(id), model);
+            if (result.IsAcknowledged && result.ModifiedCount.Equals(0))
             {
-                _owners[searchIndex] = model;
-                return true;
+                return false;
             }
-            return false;
+
+            return true;
         }
     }
 }

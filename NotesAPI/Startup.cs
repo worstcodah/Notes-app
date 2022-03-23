@@ -6,8 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NotesAPI.Models;
 using NotesAPI.Services;
+using NotesAPI.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,6 +34,8 @@ namespace NotesAPI
             services.AddControllers();
             services.AddSingleton<INoteCollectionService, NoteCollectionService>();
             services.AddSingleton<ICollectionService<Owner>, OwnerCollectionService>();
+            services.Configure<MongoDBSettings>(Configuration.GetSection(nameof(MongoDBSettings)));
+            services.AddSingleton<IMongoDBSettings>(sp => sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
 
             services.AddSwaggerGen(c =>
             {

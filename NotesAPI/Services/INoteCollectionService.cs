@@ -1,4 +1,5 @@
-﻿using NotesAPI.Models;
+﻿using MongoDB.Driver;
+using NotesAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace NotesAPI.Services
 {
     public interface INoteCollectionService: ICollectionService<Note>
     {
-        List<Note> GetNotesByOwnerId(Guid ownerId);
+        Task<List<Note>> GetNotesByOwnerId(Guid ownerId);
     }
 }
