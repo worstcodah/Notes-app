@@ -26,7 +26,7 @@ namespace NotesAPI.Controllers
         public async Task<IActionResult> GetOwner(Guid id)
         {
             var result = await _ownerCollectionService.Get(id);
-            if(result is null)
+            if (result is null)
             {
                 return NotFound();
             }
@@ -47,11 +47,11 @@ namespace NotesAPI.Controllers
         [ProducesResponseType(200)]
         public async Task<IActionResult> CreateOwner([FromBody] Owner owner)
         {
-            
+
             var create = await _ownerCollectionService.Create(owner);
-            if(create is false)
+            if (create is false)
             {
-                return BadRequest($"An object with the id {owner.Id} already exists" );
+                return BadRequest($"An object with the id {owner.Id} already exists");
             }
             return Ok(await _ownerCollectionService.GetAll());
         }
@@ -65,7 +65,7 @@ namespace NotesAPI.Controllers
             }
 
             var update = await _ownerCollectionService.Update(id, owner);
-            if(update is false)
+            if (update is false)
             {
                 return NotFound();
             }
@@ -76,12 +76,12 @@ namespace NotesAPI.Controllers
         public async Task<IActionResult> DeleteOwner(Guid id)
         {
             var delete = await _ownerCollectionService.Delete(id);
-            if(delete is false)
+            if (delete is false)
             {
                 return NotFound();
             }
             return Ok(await _ownerCollectionService.GetAll());
         }
-        
+
     }
 }
